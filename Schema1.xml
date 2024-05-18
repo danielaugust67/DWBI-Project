@@ -1,0 +1,78 @@
+<Schema name="Kickstarter " description="OLAP Scheme for analyzing top Kickstarter project category" measuresCaption="Measures related to Kickstarter project performance" defaultRole="Admin">
+  <Dimension type="StandardDimension" visible="true" foreignKey="category_id" name="Category" description="This dimension table contains detailed information about the specific categories of Kickstarter projects. It facilitates analysis based on the type of project.">
+    <Hierarchy name="dim_category " visible="true" hasAll="true" allMemberName="All Categories" primaryKey="category_id" description="This dimension table contains detailed information about the specific categories of Kickstarter projects. It facilitates analysis based on the type of project.">
+      <Table name="dim_category" schema="public" alias="">
+      </Table>
+      <Level name="Category" visible="true" column="category_id" nameColumn="category_name" ordinalColumn="category_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="IfBlankName" description="Nama kategori yang menjelaskan jenis atau bidang proyek yang terkait">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" foreignKey="parent_id" name="Parent" description="This dimension table contains hierarchical information about the parent categories under which specific Kickstarter project categories are classified. It allows for broader analysis based on parent category groups. ">
+    <Hierarchy name="dim_parent" visible="true" hasAll="true" allMemberName="AllParent" primaryKey="parent_id" description="This dimension table contains hierarchical information about the parent categories under which specific Kickstarter project categories are classified. It allows for broader analysis based on parent category groups. ">
+      <Table name="dim_parent" schema="public" alias="">
+      </Table>
+      <Level name="Parent" visible="true" column="parent_id" nameColumn="parent_name" ordinalColumn="parent_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="IfBlankName" description="Nama terawal dari kategori atau sebelum kategori">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" foreignKey="project_id" name="Project" description="This dimension table includes detailed information about individual Kickstarter projects, capturing attributes such as project name, creator, state, backers count, goal, and pledged amount. ">
+    <Hierarchy name="dim_project" visible="true" hasAll="true" allMemberName="AllProjects" primaryKey="project_id" description="This dimension table includes detailed information about individual Kickstarter projects, capturing attributes such as project name, creator, state, backers count, goal, and pledged amount. ">
+      <Table name="dim_project" schema="public">
+      </Table>
+      <Level name="Project" visible="true" column="project_id" nameColumn="project_name" ordinalColumn="project_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="IfBlankName" description="Nama atau judul proyek yang memberikan informasi tentang apa yang proyek tersebut">
+      </Level>
+      <Level name="State" visible="true" column="project_state" nameColumn="project_state" parentColumn="project_id" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" description="Status proyek, misalnya &#34;live&#34; untuk proyek yang sedang berlangsung atau &#34;successful&#34; untuk proyek yang berhasil mencapai target pendanaan. Atribut ini memberikan informasi tentang status saat ini dari proyek">
+      </Level>
+      <Level name="Goal" visible="true" column="project_goal" nameColumn="project_goal" parentColumn="project_id" uniqueMembers="false" levelType="Regular" description="Jumlah dana yang ditargetkan untuk dikumpulkan dalam proyek yang terkait dengan entri">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" foreignKey="location_id" name="Country" description="This dimension table contains information about the countries where Kickstarter projects are launched. It enables geographic analysis, providing insights into regional trends and performance. ">
+    <Hierarchy name="dim_country" visible="true" hasAll="true" allMemberName="All Countries" primaryKey="location_id" description="This dimension table contains information about the countries where Kickstarter projects are launched. It enables geographic analysis, providing insights into regional trends and performance. ">
+      <Table name="dim_country" schema="public" alias="">
+      </Table>
+      <Level name="Country" visible="true" column="country_displayable_name" nameColumn="country_displayable_name" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" description="nama lengkap negara">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="TimeDimension" visible="true" name="Date" description="This dimension table contains date information, allowing analysis of Kickstarter projects over time. It includes various date-related attributes such as creation, launch, deadline, and state change dates, as well as year, month, and day. ">
+    <Hierarchy name="dim_date" visible="true" hasAll="true" allMemberName="All Date" primaryKey="date_id" description="This dimension table contains date information, allowing analysis of Kickstarter projects over time. It includes various date-related attributes such as creation, launch, deadline, and state change dates, as well as year, month, and day. ">
+      <Table name="dim_date" schema="public" alias="">
+      </Table>
+      <Level name="Created_at" visible="true" table="dim_date" column="created_at" nameColumn="created_at" type="Date" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" description="Waktu ketika proyek dibuat atau diposting di platform Kickstarter. Ini mencatat tanggal dan waktu ketika proyek dibuat.">
+      </Level>
+      <Level name="Launched_at" visible="true" table="dim_date" column="launched_at" nameColumn="launched_at" type="Date" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" description="Waktu ketika proyek diluncurkan atau dimulai di platform Kickstarter. Ini mencatat tanggal dan waktu ketika proyek mulai dapat menerima dukungan dari pendukung.">
+      </Level>
+      <Level name="Deadline" visible="true" table="dim_date" column="deadline" nameColumn="deadline" type="Date" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" description="Tanggal atau waktu batas akhir untuk mencapai target pendanaan proyek. Ini adalah tanggal atau waktu ketika kampanye proyek dianggap berakhir.">
+      </Level>
+      <Level name="State_Changed_At" visible="true" table="dim_date" column="state_changed_at" nameColumn="state_changed_at" type="Date" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" description="Waktu ketika status proyek berubah. Ini mencatat tanggal dan waktu ketika status proyek berubah, misalnya dari &#34;live&#34; menjadi &#34;successful&#34; atau &#34;failed&#34;.">
+      </Level>
+      <Level name="Year" visible="true" table="dim_date" column="created_at" nameColumn="created_at" type="Date" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" description="Tahun yang terkait dengan entri tanggal. Ini memberikan informasi tentang tahun dari tanggal tertentu.">
+      </Level>
+      <Level name="Month" visible="true" table="dim_date" column="created_at" nameColumn="created_at" type="Date" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never" description="Bulan yang terkait dengan entri tanggal. Ini memberikan informasi tentang bulan dari tanggal tertentu.">
+      </Level>
+      <Level name="Day" visible="true" table="dim_date" column="created_at" nameColumn="created_at" type="Date" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never" description="Hari yang terkait dengan entri tanggal. Ini memberikan informasi tentang hari dari tanggal tertentu.">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="Kickstarter " caption="Top Project Category Kickstarter " visible="true" cache="true" enabled="true">
+    <Table name="fact_project" schema="public" alias="">
+    </Table>
+    <DimensionUsage source="Category" name="Category" visible="true" foreignKey="category_id">
+    </DimensionUsage>
+    <DimensionUsage source="Project" name="Project" visible="true" foreignKey="project_id">
+    </DimensionUsage>
+    <DimensionUsage source="Country" name="Country" visible="true" foreignKey="location_id">
+    </DimensionUsage>
+    <DimensionUsage source="Date" name="Date" visible="true" foreignKey="date_id">
+    </DimensionUsage>
+    <Measure name="BackersCount" column="backers_count" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Pledged" column="pledged" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Average Days" column="average_days" aggregator="avg" visible="false">
+    </Measure>
+    <Measure name="Sum Days" column="sum_days" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
